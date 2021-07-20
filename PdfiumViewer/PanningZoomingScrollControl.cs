@@ -258,7 +258,7 @@ namespace PdfiumViewer
         {
             base.OnMouseMove(e);
 
-            if (!MousePanningEnabled || !Capture)
+            if (!MousePanningEnabled || !Capture || e.Button != MouseButtons.Left)
                 return;
 
             var offset = new Point(e.Location.X - _dragStart.X, e.Location.Y - _dragStart.Y);

@@ -915,6 +915,9 @@ namespace PdfiumViewer
         {
             base.OnMouseDown(e);
 
+            if (e.Button != MouseButtons.Left)
+                return;
+
             HandleMouseDownForLinks(e);
 
             if (_cursorMode == PdfViewerCursorMode.TextSelection)
@@ -929,6 +932,9 @@ namespace PdfiumViewer
         {
             base.OnMouseUp(e);
 
+            if (e.Button != MouseButtons.Left)
+                return;
+
             HandleMouseUpForLinks(e);
 
             if (_cursorMode == PdfViewerCursorMode.TextSelection)
@@ -941,7 +947,10 @@ namespace PdfiumViewer
         {
             base.OnMouseMove(e);
 
-            if (_cursorMode == PdfViewerCursorMode.TextSelection)
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            if (_cursorMode == PdfViewerCursorMode.TextSelection )
             {
                 HandleMouseMoveForTextSelection(e);
             }
@@ -949,7 +958,10 @@ namespace PdfiumViewer
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            base.OnMouseDoubleClick(e);
+            base.OnMouseDoubleClick(e); 
+            
+            if (e.Button != MouseButtons.Left)
+                return;
 
             if (_cursorMode == PdfViewerCursorMode.TextSelection)
             {
@@ -999,9 +1011,6 @@ namespace PdfiumViewer
             if (e.Handled)
                 return;
 
-            if (e.Link.TargetPage.HasValue)
-                Page = e.Link.TargetPage.Value;
-
             if (e.Link.Uri != null)
             {
                 try
@@ -1014,6 +1023,9 @@ namespace PdfiumViewer
                     // be thrown (when it auto-updates).
                 }
             }
+
+            if (e.Link.TargetPage.HasValue)
+                Page = e.Link.TargetPage.Value;
         }
 
         private void HandleMouseDownForTextSelection(MouseEventArgs e)
