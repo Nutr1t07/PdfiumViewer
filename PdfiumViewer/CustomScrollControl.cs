@@ -182,9 +182,16 @@ namespace PdfiumViewer
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            if ((ModifierKeys & Keys.Control) != 0)
+            {
+                base.OnMouseWheel(e);
+                return;
+            }
+
             // Favor the vertical scroll bar, since it's the most
             // common use.  However, if there isn't a vertical
             // scroll and the horizontal is on, then wheel it around.
+
 
             if (VScroll)
             {
@@ -349,8 +356,8 @@ namespace PdfiumViewer
         {
             bool needLayout = false;
 
-            double hScale = _displayRect.Height==0 ? 1 :(double)width / _displayRect.Width;
-            double vScale = _displayRect.Height==0? 1 : (double)height / _displayRect.Height;
+            double hScale = _displayRect.Height==0 ? 1 : (double)width / _displayRect.Width;
+            double vScale = _displayRect.Height==0 ? 1 : (double)height / _displayRect.Height;
 
             if (_displayRect.Width != width || _displayRect.Height != height)
             {
