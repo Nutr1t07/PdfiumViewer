@@ -36,7 +36,17 @@ namespace PdfiumViewer
         private PdfViewerCursorMode _cursorMode = PdfViewerCursorMode.Pan;
         private bool _isSelectingText = false;
         private MouseState _cachedMouseState = null;
-        private TextSelectionState _textSelectionState = null;
+        private TextSelectionState __textSelectionState = null;
+
+        private TextSelectionState _textSelectionState
+        {
+            get => __textSelectionState;
+            set
+            {
+                __textSelectionState = value;
+                SelectionChanged(new SelectionChangeEventArgs(SelectedText));
+            }
+        }
 
         /// <summary>
         /// The associated PDF document.
@@ -843,7 +853,7 @@ namespace PdfiumViewer
 
             int height = (int)(scaledHeight + (ShadeBorder.Size.Vertical + PageMargin.Vertical) * Document.PageCount);
             int width = (int)(_maxWidth * _scaleFactor + ShadeBorder.Size.Horizontal + PageMargin.Horizontal);
-            
+
             var center = new Point(
                 DisplayRectangle.Width / 2,
                 DisplayRectangle.Height / 2
@@ -852,7 +862,8 @@ namespace PdfiumViewer
             if (
                 DisplayRectangle.Width > ClientSize.Width ||
                 DisplayRectangle.Height > ClientSize.Height
-            ) {
+            )
+            {
                 center.X += DisplayRectangle.Left;
                 center.Y += DisplayRectangle.Top;
             }
@@ -950,7 +961,7 @@ namespace PdfiumViewer
             if (e.Button != MouseButtons.Left)
                 return;
 
-            if (_cursorMode == PdfViewerCursorMode.TextSelection )
+            if (_cursorMode == PdfViewerCursorMode.TextSelection)
             {
                 HandleMouseMoveForTextSelection(e);
             }
@@ -958,8 +969,8 @@ namespace PdfiumViewer
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            base.OnMouseDoubleClick(e); 
-            
+            base.OnMouseDoubleClick(e);
+
             if (e.Button != MouseButtons.Left)
                 return;
 
@@ -1144,6 +1155,22 @@ namespace PdfiumViewer
             var handler = LinkClick;
             if (handler != null)
                 handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs when text selected in renderer changed.
+        /// </summary>
+        [Category("Action")]
+        [Description("Occurs when text selected in renderer changed.")]
+        public event SelectionChangeEventHandler SelectionChange;
+
+        /// <summary>
+        /// Called when a link is clicked.
+        /// </summary>
+        /// <param name="e">The event args.</param>
+        protected virtual void SelectionChanged(SelectionChangeEventArgs e)
+        {
+            SelectionChange?.Invoke(this, e);
         }
 
         /// <summary>
