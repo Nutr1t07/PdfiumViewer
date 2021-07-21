@@ -321,8 +321,8 @@ namespace PdfiumViewer.Demo
                     pdfViewer1.Document = form.Document;
                 }
             }
-		}
-			
+        }
+
         private void informationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PdfInformation info = pdfViewer1.Document.GetInformation();
@@ -337,16 +337,6 @@ namespace PdfiumViewer.Demo
             sz.AppendLine($"Modified Date: {info.ModificationDate}");
 
             MessageBox.Show(sz.ToString(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-		}	
-
-        private void _getTextFromPage_Click(object sender, EventArgs e)
-        {
-            int page = pdfViewer1.Renderer.Page;
-            string text = pdfViewer1.Document.GetPdfText(page);
-            string caption = string.Format("Page {0} contains {1} character(s):", page + 1, text.Length);
-
-            if (text.Length > 128) text = text.Substring(0, 125) + "...\n\n\n\n..." + text.Substring(text.Length - 125);
-            MessageBox.Show(this, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
@@ -382,6 +372,11 @@ namespace PdfiumViewer.Demo
         private void pdfViewerContextMenu_Opening(object sender, CancelEventArgs e)
         {
             copyToolStripMenuItem.Enabled = pdfViewer1.Renderer.IsTextSelected;
+        }
+
+        private void _selectMode_Click(object sender, EventArgs e)
+        {
+            pdfViewer1.Renderer.CursorMode = _selectMode.Checked ? PdfViewerCursorMode.TextSelection : PdfViewerCursorMode.Pan;
         }
     }
 }
